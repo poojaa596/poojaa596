@@ -11,7 +11,7 @@ Hi there 👋I'm Pooja A, a college student with a passion for becoming a data a
  📫 How to reach me: 
  
   - Gmail: poojaa0042@gmail.com
- - Linkedin:www.linkedin.com/in/poojaarunachalam
+ - Linkedin:http://www.linkedin.com/in/poojaa596
  
  😄 Pronouns: She
  
