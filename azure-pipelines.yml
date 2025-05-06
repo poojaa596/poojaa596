@@ -1,0 +1,38 @@
+trigger:
+- main  # Or your specific branch name
+
+pool:
+  vmImage: 'ubuntu-latest'  # You can use 'windows-latest' if your project requires a Windows environment
+
+variables:
+  mavenOpts: '-Xmx3072m'  # Optional, to set heap size for Maven (adjust as needed)
+
+steps:
+# Step 1: Install the required JDK version
+- task: UseJavaToolInstaller@1
+  inputs:
+    versionSpec: '11'  # Use Java version 11 (change it if you need another version)
+    jdkArchitecture: 'x64'
+
+# Step 2: Install Maven
+- task: UseMaven@4
+  inputs:
+    mavenVersion: '3.x'  # Use the latest version of Maven
+    jdkVersionOption: '1.11'  # Match the JDK version with the one above
+    options: '$(mavenOpts)'  # Use the variable for Maven options
+
+# Step 3: Run Maven to build the project and execute unit tests
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'  # Path to your Maven POM file
+    goals: 'clean install'  # Maven command to clean and install
+    options: '-DskipTests=false'  # Run tests
+    publishJUnitResults: true  # Publish test results to Azure DevOps
+    testResultsFiles: '**/TEST-*.xml'  # Path to the test result files (JUnit format)
+
+# Step 4: Publish the artifact (the .jar file)
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/target'  # Path to the built .jar file
+    ArtifactName: 'SpringBootApp'  # Name of the artifact (can be any name you like)
+    publishLocation: 'Container'  # Artifact location to be uploaded to Azure DevOps container
